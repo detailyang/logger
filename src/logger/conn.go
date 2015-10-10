@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 15:01:22
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-10 17:21:04
+* @Last Modified time: 2015-10-10 17:58:11
  */
 
 package logger
@@ -12,8 +12,9 @@ import (
 )
 
 type Conn struct {
-	conn net.Conn
-	Writter
+	conn  net.Conn
+	Name  string
+	Alive bool
 }
 
 func NewConn(conn net.Conn) *Conn {
