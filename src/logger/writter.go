@@ -48,9 +48,12 @@ func NewWritter(localServerString, remoteServerString, localFileString string) *
 func (self *Writter) Write(msg []byte) (n int, err error) {
 	for _, io := range self.io {
 		n, err = io.Write(msg)
+        //write empty to detect broken pipe 
+        n, err = io.Write([]byte{})
 		if err == nil {
 			return n, err
 		}
+        log.Println(err)
 	}
 
 	return 0, errors.New("cannot write any server")

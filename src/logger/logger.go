@@ -28,6 +28,10 @@ func NewLogger(localServerString, remoteServerString, localFileString string) *L
 
 func (self *Logger) print() {
 	for line := range self.lineChannel {
+        _, err := self.writter.Write(line)
+        if err != nil {
+            log.Println(err)
+        }
 		log.Println(line)
 	}
 }
