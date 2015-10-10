@@ -8,28 +8,34 @@
 package main
 
 import (
-	"bufio"
+	//"bufio"
+    "log/syslog"
 	"log"
 	"os"
+    "syscall"
 )
 
 func main() {
-	f, err := os.OpenFile("./tmp", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
+    w, err := syslog.New(syslog.LOG_INFO, "ylogger")
+    if err != nil {
+        log.Fatal(err)
+    }
+    log.SetOutput(w)
+
+    log.Println("start up")
+	f, err := os.OpenFile("/data/logs/tmp", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
 	if err != nil {
 		log.Println(err)
 	}
 	defer f.Close()
-	reader := bufio.NewReader(os.Stdin)
+    
+
+    buf := make([]byte, 65536)
 	for {
-		line, isPrefix, err := reader.ReadLine()
-		//TODO isprefix
-		_ = isPrefix
-		if err != nil {
-			log.Println("get error ", err)
-			break
-		}
-		log.Println(line)
-		f.Write(line)
-		f.Write([]byte{'\n'})
+        rb, err := syscall.Read(0, buf)
+        if err != nil {
+            log.Println(err)
+        }
+		f.Write(buf[:rb])
 	}
 }
