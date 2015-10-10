@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 12:25:53
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-10 14:17:20
+* @Last Modified time: 2015-10-10 14:54:50
  */
 
 package logger
@@ -16,22 +16,22 @@ import (
 
 type Logger struct {
 	lineChannel chan []byte
-	writter     *Writter
+	writterList *WritterList
 }
 
 func NewLogger(localServerString, remoteServerString, localFileString string) *Logger {
 	return &Logger{
 		lineChannel: make(chan []byte),
-		writter:     NewWritter(localServerString, remoteServerString, localFileString),
+		writterList: NewWritterList(localServerString, remoteServerString, localFileString),
 	}
 }
 
 func (self *Logger) print() {
 	for line := range self.lineChannel {
-        _, err := self.writter.Write(line)
-        if err != nil {
-            log.Println(err)
-        }
+		_, err := self.writterList.Write(line)
+		if err != nil {
+			log.Println(err)
+		}
 		log.Println(line)
 	}
 }
