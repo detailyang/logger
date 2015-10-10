@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 13:36:16
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-10 18:06:29
+* @Last Modified time: 2015-10-10 18:07:43
  */
 
 package logger
@@ -44,7 +44,6 @@ func NewWritterList(urls []string) *WritterList {
 				alive = false
 				log.Println("[error] connect local server ", err)
 			}
-			defer tmpConn.Close()
 		case "unix":
 			localFile, err := os.OpenFile(urlSlice[1][2:], os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
 			if err != nil {
@@ -57,7 +56,6 @@ func NewWritterList(urls []string) *WritterList {
 				alive = false
 				log.Println("[error] copy local file conn ", err)
 			}
-			defer tmpConn.Close()
 		default:
 			continue
 		}
