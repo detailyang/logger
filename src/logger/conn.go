@@ -60,11 +60,13 @@ func (self *Conn) Connect() {
 	default:
 		break
 	}
-	err = self.conn.Close()
-	if err != nil {
-		log.Printf("[error] close %s %s\r\n", self.Name, err.Error())
-		return
-	}
+	if self.conn != nil {
+        err = self.conn.Close()
+        if err != nil {
+            log.Printf("[error] close %s %s\r\n", self.Name, err.Error())
+            return
+        }
+    }
 	self.conn = tmpConn
 	//should use mutex?
 	self.Alive = true

@@ -55,7 +55,6 @@ func NewLogger(configfile, logFile, topic, localServer, remoteServer, localFile 
 		if err != nil {
 			log.Println("[error] log to logfile ", err)
 		} else {
-            defer f.Close()
             log.SetOutput(f)
         }
 	}
