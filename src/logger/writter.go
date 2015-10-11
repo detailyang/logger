@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 13:36:16
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-11 18:49:30
+* @Last Modified time: 2015-10-11 21:39:35
  */
 
 package logger
@@ -65,7 +65,6 @@ func NewWritterList(urls []string) *WritterList {
 				select {
 				case <-ticker.C:
 					if conn.Alive == false {
-						log.Printf("[error] resource %s is dead \r\n", conn.Name)
 						conn.Connect()
 					}
 				case <-conn.Stop:

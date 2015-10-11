@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 15:01:22
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-11 20:59:40
+* @Last Modified time: 2015-10-11 21:48:36
  */
 
 package logger
@@ -18,6 +18,7 @@ type Config struct {
 	LocalServer  string `json:"local_server"`
 	RemoteServer string `json:"remote_server"`
 	LocalFile    string `json:"local_file"`
+	LogFile      string `json:"log_file"`
 	Topic        string
 }
 
