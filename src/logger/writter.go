@@ -64,7 +64,9 @@ func NewWritterList(urls []string) *WritterList {
 			for {
 				select {
 				case <-ticker.C:
+                    log.Println(conn.Alive)
 					if conn.Alive == false {
+                        log.Println("try to reconnect")
 						conn.Connect()
 					}
 				case <-conn.Stop:
@@ -81,12 +83,12 @@ func NewWritterList(urls []string) *WritterList {
 func (self *WritterList) Write(msg []byte) (n int, err error) {
 	for _, resource := range self.Resources {
 		if resource.Alive == false {
-			log.Println(resource.Name)
+            log.Printf("[error] resource %s is dead\r\n", resource.Name)
 			continue
 		}
 		n, err = resource.Write(msg)
 		if err != nil {
-			log.Println(err)
+            log.Printf("[error] resource %s cannout write\r\n", resource.Name)
 			resource.Alive = false
 			continue
 		}
@@ -95,7 +97,8 @@ func (self *WritterList) Write(msg []byte) (n int, err error) {
 		if err == nil {
 			return n, err
 		}
-		log.Println(err)
+        log.Printf("[error] resource %s cannout write empty message \r\n", resource.Name)
+
 		resource.Alive = false
 	}
 
