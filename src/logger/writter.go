@@ -50,7 +50,6 @@ func NewWritterList(urls []string) *WritterList {
 				alive = false
 				log.Println("[error] open local file ", err)
 			}
-			defer localFile.Close()
 			tmpConn = NewFileConn(localFile)
 		default:
 			continue
@@ -66,9 +65,13 @@ func NewWritterList(urls []string) *WritterList {
 
 func (self *WritterList) Write(msg []byte) (n int, err error) {
 	for _, resource := range self.Resources {
+        if resource.Alive == false {
+		    log.Println(resource.Name)
+            continue
+        }
 		n, err = resource.Write(msg)
-		log.Println(resource.Name)
 		if err != nil {
+		    log.Println(err)
 			continue
 		}
 		//write empty message to detect broken pipe
