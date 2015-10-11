@@ -24,7 +24,6 @@ type WritterList struct {
 func NewWritterList(urls []string) *WritterList {
 	var name string
 	var alive bool
-	var conn *Conn
 	var tmpConn net.Conn
 	var err error
 
@@ -55,18 +54,17 @@ func NewWritterList(urls []string) *WritterList {
 		default:
 			continue
 		}
-		conn = NewConn(tmpConn)
+        //for closure
+		conn := NewConn(tmpConn)
 		conn.Name = name
 		conn.Alive = alive
 		wl.Resources = append(wl.Resources, conn)
-		go func() {
+		go func(*Conn) {
 			ticker := time.NewTicker(1 * time.Second)
 			for {
 				select {
 				case <-ticker.C:
-                    log.Println(conn.Alive)
 					if conn.Alive == false {
-                        log.Println("try to reconnect")
 						conn.Connect()
 					}
 				case <-conn.Stop:
@@ -74,7 +72,7 @@ func NewWritterList(urls []string) *WritterList {
 					return
 				}
 			}
-		}()
+		}(conn)
 	}
 
 	return wl
