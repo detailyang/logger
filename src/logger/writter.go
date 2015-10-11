@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 13:36:16
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-10 18:07:43
+* @Last Modified time: 2015-10-11 10:41:52
  */
 
 package logger
@@ -51,11 +51,7 @@ func NewWritterList(urls []string) *WritterList {
 				log.Println("[error] open local file ", err)
 			}
 			defer localFile.Close()
-			tmpConn, err = net.FileConn(localFile)
-			if err != nil {
-				alive = false
-				log.Println("[error] copy local file conn ", err)
-			}
+			tmpConn = NewFileConn(localFile)
 		default:
 			continue
 		}
