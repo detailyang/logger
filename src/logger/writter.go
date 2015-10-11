@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 13:36:16
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-11 10:41:52
+* @Last Modified time: 2015-10-11 18:02:41
  */
 
 package logger
@@ -14,6 +14,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	"time"
 )
 
 type WritterList struct {
@@ -58,6 +59,20 @@ func NewWritterList(urls []string) *WritterList {
 		conn.Name = name
 		conn.Alive = alive
 		wl.Resources = append(wl.Resources, conn)
+		go func() {
+			ticker := time.NewTicker(1 * time.Second)
+			for {
+				select {
+				case <-ticker.C:
+					if conn.Alive == false {
+						conn.Connect()
+					}
+				case <-conn.Stop:
+					ticker.Stop()
+					return
+				}
+			}
+		}()
 	}
 
 	return wl
@@ -65,13 +80,14 @@ func NewWritterList(urls []string) *WritterList {
 
 func (self *WritterList) Write(msg []byte) (n int, err error) {
 	for _, resource := range self.Resources {
-        if resource.Alive == false {
-		    log.Println(resource.Name)
-            continue
-        }
+		if resource.Alive == false {
+			log.Println(resource.Name)
+			continue
+		}
 		n, err = resource.Write(msg)
 		if err != nil {
-		    log.Println(err)
+			log.Println(err)
+			resource.Alive = false
 			continue
 		}
 		//write empty message to detect broken pipe
@@ -80,6 +96,7 @@ func (self *WritterList) Write(msg []byte) (n int, err error) {
 			return n, err
 		}
 		log.Println(err)
+		resource.Alive = false
 	}
 
 	return 0, errors.New("cannot write any server")
