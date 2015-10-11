@@ -44,7 +44,7 @@ func NewLogger(configfile, logFile, topic, localServer, remoteServer, localFile 
 	}
 
 	//default set syslog
-	w, err := syslog.New(syslog.LOG_INFO, "qtunnel")
+	w, err := syslog.New(syslog.LOG_INFO, "ylogger")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -54,9 +54,10 @@ func NewLogger(configfile, logFile, topic, localServer, remoteServer, localFile 
 		f, err := os.OpenFile(config.LogFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err != nil {
 			log.Println("[error] log to logfile ", err)
-		}
-		defer f.Close()
-		log.SetOutput(f)
+		} else {
+            defer f.Close()
+            log.SetOutput(f)
+        }
 	}
 
 	return &Logger{
