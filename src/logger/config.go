@@ -47,7 +47,7 @@ func (self *Config) isValid() bool {
 		log.Println("[error] config remote server is not the pattern ^(tcp|udp)://.*?:\\d+$")
 		return false
 	}
-	if filePattern.MatchString(self.RemoteServer) == false {
+	if filePattern.MatchString(self.LocalFile) == false {
 		log.Println("[error] config local file is not the pattern ^unix://.*$")
 		return false
 	}

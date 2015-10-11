@@ -30,6 +30,7 @@ func NewLogger(configfile, topic, localServer, remoteServer, localFile string) *
 			Topic:        topic,
 		}
 	}
+    config.Topic = topic
 	if err := config.isValid(); err == false {
 		config = &Config{
 			LocalServer:  localServer,
@@ -38,10 +39,9 @@ func NewLogger(configfile, topic, localServer, remoteServer, localFile string) *
 			Topic:        topic,
 		}
 	}
-
 	return &Logger{
 		lineChannel: make(chan []byte),
-		writterList: NewWritterList([]string{"", "", ""}),
+		writterList: NewWritterList([]string{config.LocalServer, config.RemoteServer, config.LocalFile}),
 	}
 }
 
