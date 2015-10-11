@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 15:01:22
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-11 12:47:09
+* @Last Modified time: 2015-10-11 18:48:48
  */
 
 package logger
@@ -68,5 +68,6 @@ func (self *Conn) Connect() {
 		return
 	}
 	self.conn = tmpConn
+	//should use mutex?
 	self.Alive = true
 }

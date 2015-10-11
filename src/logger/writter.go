@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 13:36:16
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-11 18:02:41
+* @Last Modified time: 2015-10-11 18:48:10
  */
 
 package logger
@@ -54,7 +54,7 @@ func NewWritterList(urls []string) *WritterList {
 		default:
 			continue
 		}
-        //for closure
+		//for closure
 		conn := NewConn(tmpConn)
 		conn.Name = name
 		conn.Alive = alive
@@ -65,6 +65,7 @@ func NewWritterList(urls []string) *WritterList {
 				select {
 				case <-ticker.C:
 					if conn.Alive == false {
+						log.Printf("[error] resource %s is dead \r\n", resource.Name)
 						conn.Connect()
 					}
 				case <-conn.Stop:
@@ -81,12 +82,10 @@ func NewWritterList(urls []string) *WritterList {
 func (self *WritterList) Write(msg []byte) (n int, err error) {
 	for _, resource := range self.Resources {
 		if resource.Alive == false {
-            log.Printf("[error] resource %s is dead\r\n", resource.Name)
 			continue
 		}
 		n, err = resource.Write(msg)
 		if err != nil {
-            log.Printf("[error] resource %s cannout write\r\n", resource.Name)
 			resource.Alive = false
 			continue
 		}
@@ -95,7 +94,6 @@ func (self *WritterList) Write(msg []byte) (n int, err error) {
 		if err == nil {
 			return n, err
 		}
-        log.Printf("[error] resource %s cannout write empty message \r\n", resource.Name)
 
 		resource.Alive = false
 	}
