@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 15:01:22
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-11 18:48:48
+* @Last Modified time: 2015-10-11 18:55:41
  */
 
 package logger
@@ -13,8 +13,6 @@ import (
 	"os"
 	"strings"
 )
-
-type ConnectCallback func(*Conn) (net.Conn, error)
 
 type Conn struct {
 	conn  net.Conn

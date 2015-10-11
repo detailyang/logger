@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 12:25:53
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-10 17:59:43
+* @Last Modified time: 2015-10-11 20:59:56
  */
 
 package logger
@@ -17,12 +17,31 @@ import (
 type Logger struct {
 	lineChannel chan []byte
 	writterList *WritterList
+	config      Config
 }
 
-func NewLogger(localServerString, remoteServerString, localFileString string) *Logger {
+func NewLogger(configfile, topic, localServer, remoteServer, localFile string) *Logger {
+	config := NewConfig(configfile)
+	if config == nil {
+		config = &Config{
+			LocalServer:  localServer,
+			RemoteServer: remoteServer,
+			LocalFile:    localFile,
+			Topic:        topic,
+		}
+	}
+	if err := config.isValid(); err == false {
+		config = &Config{
+			LocalServer:  localServer,
+			RemoteServer: remoteServer,
+			LocalFile:    localFile,
+			Topic:        topic,
+		}
+	}
+
 	return &Logger{
 		lineChannel: make(chan []byte),
-		writterList: NewWritterList([]string{localServerString, remoteServerString, localFileString}),
+		writterList: NewWritterList([]string{"", "", ""}),
 	}
 }
 
@@ -32,7 +51,6 @@ func (self *Logger) print() {
 		if err != nil {
 			log.Println(err)
 		}
-		log.Println(line)
 	}
 }
 
