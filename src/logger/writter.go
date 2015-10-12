@@ -44,7 +44,6 @@ func NewWritterList(urls []string) *WritterList {
 				alive = false
 				log.Println("[error] connect ", url, " ", err)
 			}
-			log.Println("[info] connect success ", url)
 		case "unix":
 			localFile, err := os.OpenFile(urlSlice[1][2:], os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
 			if err != nil {
@@ -82,11 +81,9 @@ func NewWritterList(urls []string) *WritterList {
 func (self *WritterList) Write(msg []byte) (n int, err error) {
 	for _, resource := range self.Resources {
 		if resource.Alive == false {
-            log.Println("[info] resource ", resource.Name, " is dead")
 			continue
 		}
 		n, err = resource.Write(msg)
-        log.Println("[info] write msg byte ", n, resource.Name, err)
 		if err != nil {
 			resource.Alive = false
             log.Println("[error] write msg error", err)
@@ -94,7 +91,6 @@ func (self *WritterList) Write(msg []byte) (n int, err error) {
 		}
 		//write empty message to detect broken pipe
 		n, err = resource.Write([]byte{})
-        log.Println("[info] write empty msg byte ", n, resource.Name, err)
 		if err == nil {
 			return n, err
 		}
@@ -107,7 +103,9 @@ func (self *WritterList) Write(msg []byte) (n int, err error) {
 }
 
 func (self *WritterList) Close() {
+    var done struct{}
 	for _, resource := range self.Resources {
+        resource.Stop <- done
 		resource.Close()
 	}
 }
