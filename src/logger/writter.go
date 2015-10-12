@@ -42,8 +42,9 @@ func NewWritterList(urls []string) *WritterList {
 			tmpConn, err = net.Dial(urlSlice[0], urlSlice[1][2:]+":"+urlSlice[2])
 			if err != nil {
 				alive = false
-				log.Println("[error] connect local server ", err)
+				log.Println("[error] connect ", url, " ", err)
 			}
+			log.Println("[info] connect success ", url)
 		case "unix":
 			localFile, err := os.OpenFile(urlSlice[1][2:], os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
 			if err != nil {
@@ -81,20 +82,25 @@ func NewWritterList(urls []string) *WritterList {
 func (self *WritterList) Write(msg []byte) (n int, err error) {
 	for _, resource := range self.Resources {
 		if resource.Alive == false {
+            log.Println("[info] resource ", resource.Name, " is dead")
 			continue
 		}
 		n, err = resource.Write(msg)
+        log.Println("[info] write msg byte ", n, resource.Name, err)
 		if err != nil {
 			resource.Alive = false
+            log.Println("[error] write msg error", err)
 			continue
 		}
 		//write empty message to detect broken pipe
 		n, err = resource.Write([]byte{})
+        log.Println("[info] write empty msg byte ", n, resource.Name, err)
 		if err == nil {
 			return n, err
 		}
 
 		resource.Alive = false
+        log.Println("[error] write empty msg error", err)
 	}
 
 	return 0, errors.New("cannot write any server")
