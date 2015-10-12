@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 13:36:16
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-11 21:39:35
+* @Last Modified time: 2015-10-12 17:06:31
  */
 
 package logger
@@ -98,4 +98,10 @@ func (self *WritterList) Write(msg []byte) (n int, err error) {
 	}
 
 	return 0, errors.New("cannot write any server")
+}
+
+func (self *WritterList) Close() {
+	for _, resource := range self.Resources {
+		resource.Close()
+	}
 }

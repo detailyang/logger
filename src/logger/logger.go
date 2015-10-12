@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 12:25:53
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-12 14:56:22
+* @Last Modified time: 2015-10-12 17:05:41
  */
 
 package logger
@@ -117,4 +117,8 @@ func (self *Logger) Run() {
 
 		self.lineChannel <- msg.Bytes()
 	}
+}
+
+func (self *Logger) Stop() {
+	self.writterList.Close()
 }
