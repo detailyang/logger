@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 12:25:53
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-11 23:43:16
+* @Last Modified time: 2015-10-12 14:56:22
  */
 
 package logger
@@ -56,7 +56,7 @@ func NewLogger(configfile, logFile, topic, localServer, remoteServer, localFile 
 	log.SetOutput(w)
 
 	if config.LogFile != "syslog" {
-		f, err := os.OpenFile(config.LogFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		f, err := os.OpenFile(config.LogFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 		if err != nil {
 			log.Println("[error] log to logfile ", err)
 		} else {
