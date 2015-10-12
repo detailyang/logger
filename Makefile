@@ -2,7 +2,9 @@ GOPATH := ${GOPATH}:$(shell pwd)
 .PHONY: clean test
 
 all:
-		@GOPATH=$(GOPATH) go install -ldflags "-X main.Buildstamp `date  '+%Y-%m-%d_%I:%M:%S%p'` -X main.Githash `git rev-parse HEAD`" ylogger
+		@GOPATH=$(GOPATH) go build -ldflags "-X main.Buildstamp `date  '+%Y-%m-%d_%I:%M:%S%p'` -X main.Githash `git rev-parse HEAD`" ylogger
+		mkdir bin	
+		mv ylogger bin/
 
 clean:
 		@rm -fr bin pkg
