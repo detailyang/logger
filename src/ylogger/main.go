@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 13:13:06
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-12 21:55:16
+* @Last Modified time: 2015-10-12 22:03:45
  */
 
 package main
@@ -43,7 +43,10 @@ func main() {
 
 	if pprof == true {
 		go func() {
-			log.Println(http.ListenAndServe("0.0.0.0:"+pport, nil))
+			err := http.ListenAndServe("0.0.0.0:"+pport, nil)
+			if err != nil {
+				log.Println(err)
+			}
 		}()
 	}
 
