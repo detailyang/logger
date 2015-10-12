@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 15:01:22
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-11 18:55:41
+* @Last Modified time: 2015-10-12 15:53:35
  */
 
 package logger
@@ -45,6 +45,7 @@ func (self *Conn) Connect() {
 	case "tcp":
 		fallthrough
 	case "udp":
+		//neednt use tcp keepalive, we have proceess broken pipe and close it:)
 		tmpConn, err = net.Dial(urlSlice[0], urlSlice[1][2:]+":"+urlSlice[2])
 		if err != nil {
 			log.Printf("[error] connect %s %s\r\n", self.Name, err.Error())
@@ -61,12 +62,12 @@ func (self *Conn) Connect() {
 		break
 	}
 	if self.conn != nil {
-        err = self.conn.Close()
-        if err != nil {
-            log.Printf("[error] close %s %s\r\n", self.Name, err.Error())
-            return
-        }
-    }
+		err = self.conn.Close()
+		if err != nil {
+			log.Printf("[error] close %s %s\r\n", self.Name, err.Error())
+			return
+		}
+	}
 	self.conn = tmpConn
 	//should use mutex?
 	self.Alive = true
