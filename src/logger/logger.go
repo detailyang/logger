@@ -15,7 +15,6 @@ import (
 	"log/syslog"
 	"os"
 	"strconv"
-	"time"
 )
 
 type Logger struct {
@@ -76,7 +75,7 @@ func NewLogger(configfile, logFile, topic, localServer, remoteServer, localFile 
 		config:      config,
 		hostname:    hostname,
 		pid:         strconv.Itoa(os.Getpid()),
-		header:      []byte("<30>1993-06-01 00:00:00 " + self.hostname + " " + self.config.Topic + " - - - - "),
+		header:      []byte("<30>1993-06-01 00:00:00 " + hostname + " " + config.Topic + " - - - - "),
 	}
 }
 
