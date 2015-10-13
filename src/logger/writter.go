@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 13:36:16
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-12 17:06:31
+* @Last Modified time: 2015-10-13 12:06:13
  */
 
 package logger
@@ -43,6 +43,18 @@ func NewWritterList(urls []string) *WritterList {
 			if err != nil {
 				alive = false
 				log.Println("[error] connect ", url, " ", err)
+			}
+			if urlSlice[0] == "tcp" {
+				if tmpConn, ok := tmpConn.(*net.TCPConn); ok {
+					err = tmpConn.SetKeepAlive(true)
+					if err != nil {
+						log.Println("[error] tcp set keepalive ", err)
+					}
+					err = tmpConn.SetKeepAlivePeriod(5 * time.Second)
+					if err != nil {
+						log.Println("[error] tcp set keepalive Period", err)
+					}
+				}
 			}
 		case "unix":
 			localFile, err := os.OpenFile(urlSlice[1][2:], os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)
@@ -86,7 +98,7 @@ func (self *WritterList) Write(msg []byte) (n int, err error) {
 		n, err = resource.Write(msg)
 		if err != nil {
 			resource.Alive = false
-            log.Println("[error] write msg error", err)
+			log.Println("[error] write msg error", err)
 			continue
 		}
 		//write empty message to detect broken pipe
@@ -96,16 +108,16 @@ func (self *WritterList) Write(msg []byte) (n int, err error) {
 		}
 
 		resource.Alive = false
-        log.Println("[error] write empty msg error", err)
+		log.Println("[error] write empty msg error", err)
 	}
 
 	return 0, errors.New("cannot write any server")
 }
 
 func (self *WritterList) Close() {
-    var done struct{}
+	var done struct{}
 	for _, resource := range self.Resources {
-        resource.Stop <- done
+		resource.Stop <- done
 		resource.Close()
 	}
 }

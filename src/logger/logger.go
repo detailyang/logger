@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 12:25:53
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-13 10:51:55
+* @Last Modified time: 2015-10-13 11:01:37
  */
 
 package logger
@@ -101,7 +101,7 @@ func (self *Logger) Run() {
 			log.Fatal(err)
 			log.Println("[error] read line ", err)
 		}
-		//there is a bug to fix
+		//there is a prefix bug to fix
 		if isPrefix == true {
 			self.lineChannel <- line
 			continue
