@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 12:25:53
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-12 17:05:41
+* @Last Modified time: 2015-10-13 10:51:55
  */
 
 package logger
@@ -22,6 +22,7 @@ type Logger struct {
 	lineChannel chan []byte
 	writterList *WritterList
 	config      *Config
+	header      []byte
 	hostname    string
 	pid         string
 }
@@ -75,6 +76,7 @@ func NewLogger(configfile, logFile, topic, localServer, remoteServer, localFile 
 		config:      config,
 		hostname:    hostname,
 		pid:         strconv.Itoa(os.Getpid()),
+		header:      []byte("<30>1993-06-01 00:00:00 " + self.hostname + " " + self.config.Topic + " - - - - "),
 	}
 }
 
@@ -100,18 +102,13 @@ func (self *Logger) Run() {
 			log.Fatal(err)
 			log.Println("[error] read line ", err)
 		}
+		//there is a bug to fix
 		if isPrefix == true {
 			self.lineChannel <- line
 			continue
 		}
 		var msg bytes.Buffer
-		msg.WriteString("<30>")
-		msg.WriteString(time.Now().Format("2006-01-02 15:04:05"))
-		msg.Write([]byte{' '})
-		msg.WriteString(self.hostname)
-		msg.Write([]byte{' '})
-		msg.WriteString(self.config.Topic)
-		msg.WriteString(" - - - - ")
+		msg.Write(self.header)
 		msg.Write(line)
 		msg.Write([]byte{'\n'})
 
