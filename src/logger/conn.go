@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 15:01:22
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-12 15:53:35
+* @Last Modified time: 2015-10-13 12:11:03
  */
 
 package logger
@@ -12,6 +12,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	"time"
 )
 
 type Conn struct {
@@ -50,6 +51,16 @@ func (self *Conn) Connect() {
 		if err != nil {
 			log.Printf("[error] connect %s %s\r\n", self.Name, err.Error())
 			return
+		}
+		if tmpConn, ok := tmpConn.(*net.TCPConn); ok {
+			err = tmpConn.SetKeepAlive(true)
+			if err != nil {
+				log.Println("[error] tcp set keepalive ", err)
+			}
+			err = tmpConn.SetKeepAlivePeriod(60 * time.Second)
+			if err != nil {
+				log.Println("[error] tcp set keepalive Period", err)
+			}
 		}
 	case "unix":
 		localFile, err := os.OpenFile(urlSlice[1][2:], os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0777)

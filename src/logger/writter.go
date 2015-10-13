@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 13:36:16
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-13 12:06:13
+* @Last Modified time: 2015-10-13 12:10:51
  */
 
 package logger
@@ -50,7 +50,7 @@ func NewWritterList(urls []string) *WritterList {
 					if err != nil {
 						log.Println("[error] tcp set keepalive ", err)
 					}
-					err = tmpConn.SetKeepAlivePeriod(5 * time.Second)
+					err = tmpConn.SetKeepAlivePeriod(60 * time.Second)
 					if err != nil {
 						log.Println("[error] tcp set keepalive Period", err)
 					}
