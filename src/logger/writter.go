@@ -24,8 +24,8 @@ type WritterList struct {
 func NewWritterList(urls []string) *WritterList {
 	var name string
 	var alive bool
-	var tmpConn net.Conn
 	var err error
+    var tmpConn net.Conn
 
 	wl := &WritterList{
 		Resources: make([]*Conn, 0),
@@ -71,7 +71,7 @@ func NewWritterList(urls []string) *WritterList {
 		conn.Name = name
 		conn.Alive = alive
 		wl.Resources = append(wl.Resources, conn)
-		go func(*Conn) {
+		go func(conn *Conn) {
 			ticker := time.NewTicker(1 * time.Second)
 			for {
 				select {
