@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 12:25:53
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-14 11:27:53
+* @Last Modified time: 2015-10-14 11:29:08
  */
 
 package logger
@@ -113,7 +113,12 @@ func (self *Logger) Run() {
 			}
 			self.lineChannel <- msg.Bytes()
 		} else {
-			self.lineChannel <- append(line, '\n')
+			if isPrefix == false {
+				self.lineChannel <- append(line, '\n')
+				truncate == false
+			} else {
+				self.lineChannel <- append(line)
+			}
 		}
 
 	}
