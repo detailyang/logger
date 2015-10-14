@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 12:25:53
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-14 11:30:38
+* @Last Modified time: 2015-10-14 11:32:50
  */
 
 package logger
@@ -99,7 +99,6 @@ func (self *Logger) Run() {
 			if err == io.EOF {
 				continue
 			}
-			log.Fatal(err)
 			log.Println("[error] read line ", err)
 		}
 		if truncate == false {
