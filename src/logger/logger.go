@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 12:25:53
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-13 11:01:37
+* @Last Modified time: 2015-10-14 11:27:53
  */
 
 package logger
@@ -89,6 +89,7 @@ func (self *Logger) print() {
 }
 
 func (self *Logger) Run() {
+	truncate := false
 	//4096 is a page cache and stdin buffer size
 	reader := bufio.NewReader(os.Stdin)
 	go self.print()
@@ -101,17 +102,20 @@ func (self *Logger) Run() {
 			log.Fatal(err)
 			log.Println("[error] read line ", err)
 		}
-		//there is a prefix bug to fix
-		if isPrefix == true {
-			self.lineChannel <- line
-			continue
+		if truncate == false {
+			var msg bytes.Buffer
+			msg.Write(self.header)
+			msg.Write(line)
+			if isPrefix == false {
+				msg.Write([]byte{'\n'})
+			} else {
+				truncate = true
+			}
+			self.lineChannel <- msg.Bytes()
+		} else {
+			self.lineChannel <- append(line, '\n')
 		}
-		var msg bytes.Buffer
-		msg.Write(self.header)
-		msg.Write(line)
-		msg.Write([]byte{'\n'})
 
-		self.lineChannel <- msg.Bytes()
 	}
 }
 

@@ -25,7 +25,7 @@ func NewWritterList(urls []string) *WritterList {
 	var name string
 	var alive bool
 	var err error
-    var tmpConn net.Conn
+	var tmpConn net.Conn
 
 	wl := &WritterList{
 		Resources: make([]*Conn, 0),
