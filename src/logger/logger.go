@@ -2,7 +2,7 @@
 * @Author: detailyang
 * @Date:   2015-10-10 12:25:53
 * @Last Modified by:   detailyang
-* @Last Modified time: 2015-10-14 11:29:08
+* @Last Modified time: 2015-10-14 11:30:38
  */
 
 package logger
@@ -115,7 +115,7 @@ func (self *Logger) Run() {
 		} else {
 			if isPrefix == false {
 				self.lineChannel <- append(line, '\n')
-				truncate == false
+				truncate = false
 			} else {
 				self.lineChannel <- append(line)
 			}
